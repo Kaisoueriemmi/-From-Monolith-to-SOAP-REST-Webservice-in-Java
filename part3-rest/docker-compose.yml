@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    container_name: inventory_db
+    environment:
+      POSTGRES_USER: inventory
+      POSTGRES_PASSWORD: inventory
+      POSTGRES_DB: inventory
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  api:
+    build: .
+    container_name: inventory_api
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/inventory
+      SPRING_DATASOURCE_USERNAME: inventory
+      SPRING_DATASOURCE_PASSWORD: inventory
+    ports:
+      - "8080:8080"
+volumes:
+  pgdata:
